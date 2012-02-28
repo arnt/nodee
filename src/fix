@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# this evil hack only works for arnt. generalise when possible.
+
+# make sure to run in the right directory
+cd /home/arnt/src/nodee/gh-pages/src
+
+# the grep doesn't match this file because of the ^
+for a in $(grep -li '^<!doctype html' * | grep -v 'html$') ; do
+    sed 's/<a href="\([^":#]*\)/<a href="\1.html/g' < $a > $a.html
+done
+
+# commit what 
+git commit -m'automagic: regenerated srcdoc' .
