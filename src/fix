@@ -7,7 +7,10 @@ cd /home/arnt/src/nodee/gh-pages/src
 
 # the grep doesn't match this file because of the ^
 for a in $(grep -li '^<!doctype html' * | grep -v 'html$') ; do
-    sed 's/<a href="\([^":#]*\)/<a href="\1.html/g' < $a > $a.html
+    sed -e 's/<a href="\([^":#]*\)/<a href="\1.html/g' \
+        -e 's/<a href="http.html:/<a href="http:/g/' \
+        -e 's/<a href="https.html:/<a href="https:/g/' \
+        < $a > $a.html
 done
 
 # commit what 
