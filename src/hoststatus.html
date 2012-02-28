@@ -1,0 +1,23 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<html lang=en><head><title>HostStatus documentation</title>
+<link rel=stylesheet href="udoc.css" type="text/css">
+<link rel=generator href="http://archiveopteryx.org/udoc/">
+</head><body>
+<h1 class="classh">Class HostStatus.</h1>
+<p class="text">The HostStatus class gathers host status information and hands it out in JSON format.
+<p class="text">The point of this is to store nodee information in a zookeeper ephemeral node. As a side benefit, we'll also hand it out to anyone who asks nicely via HTTP. 
+<h2 class="functionh"><a name="HostStatus"></a>HostStatus::HostStatus()</h2>
+<p class="text">Constructs a host status object, gathering all the data. 
+<h2 class="functionh"><a name="cores"></a>int HostStatus::cores( const char * filename )</h2>
+<p class="text">Parses <i>filename</i> as though it were /proc/cpuinfo and returns the number of cores.
+<p class="text">/proc/cpuinfo also contains much other information, but I don't want to use it. Some we don't want to depend on, some we might want to use, but it changes. For instance, my desktop currently has "800MHz" cores, which tells me more about power saving than about CPU capacity.
+<p class="text">
+<h2 class="functionh"><a name="operator string"></a>HostStatus::operator string() const</h2>
+<p class="text">Returns the status in json format. 
+<h2 class="functionh"><a name="readProcMeminfo"></a>void HostStatus::readProcMeminfo( const char * filename, int &amp; total, int &amp; available )</h2>
+<p class="text">Reads /proc/meminfo, or a different file if <i>filename</i> is not /proc/meminfo, and stores the amount of total memory in <i>total</i> and likely available memory in <i>available.</i> Both <i>total</i> and <i>available</i> are in kB.
+<p class="text"><i>total</i> and <i>available</i> are set to 0 if anything fails. 
+<h2 class="functionh"><a name="readProcUptime"></a>int HostStatus::readProcUptime( const char * filename )</h2>
+<p class="text">Reads <i>filename,</i> which is assumed to be /proc/uptime (unless a different name is better for testing) and returns the host's uptime in seconds.
+<p class="text">Needed (only) for deciding which host is oldest and is therefore next to be rebooted. 
+<p class="rights">This web page based on source code belonging to <a href="http://arnt.github.com/nodee/">Arnt Gulbrandsen</a>. All rights reserved.</body></html>

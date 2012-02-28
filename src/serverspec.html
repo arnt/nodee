@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<html lang=en><head><title>ServerSpec documentation</title>
+<link rel=stylesheet href="udoc.css" type="text/css">
+<link rel=generator href="http://archiveopteryx.org/udoc/">
+</head><body>
+<h1 class="classh">Class ServerSpec.</h1>
+<p class="text">The ServerSpec class contains the complete specification for running a server using Nodee.
+<p class="text">Users generally submit this in JSON, this class parses it and makes it available to the user of this class.
+<p class="text">Here's a json example (not very nicely formatted, but json parsers don't care and neither do I, so don't bother complaining): { "coordinate" : "1.idee-prod.ideeuser.ie", "artifact" : "com.telenor:id-server:1.4.2", "filename" : "id-server-1.4.2-shaded.jar", "md5" : "2c6ca63c97c04c821613f1251643c3bb", "options" : { "--someoption" : "some value", "--anotheroption" : "more config" }, "restart" : { "period" : 120, "maxrestarts" : 10 } }
+<p class="text">Note that you cannot specify any single option twice. -foo 1 --foo 2 is not possible; nodee will use one of the two. 
+<h2 class="functionh"><a name="ServerSpec"></a>ServerSpec::ServerSpec( const ServerSpec &amp; other )</h2>
+<p class="text">Constructs an deep copy of <i>other.</i> 
+<h2 class="functionh">ServerSpec::ServerSpec()</h2>
+<p class="text">This constructor is private; the only public way to make a ServerSpec is to call <a href="serverspec.html#parseJson">parseJson()</a>. 
+<h2 class="functionh"><a name="artifact"></a>string ServerSpec::artifact() const</h2>
+<p class="text">Returns the specified artifact, typically a string such as comoyo:nodee:1.0.0. 
+<h2 class="functionh"><a name="artifactFilename"></a>string ServerSpec::artifactFilename() const</h2>
+<p class="text">Returns the URL corresponding to this artifact. Always succeeds if the ServerSpec is <a href="serverspec.html#valid">valid()</a>. 
+<h2 class="functionh"><a name="artifactUrl"></a>string ServerSpec::artifactUrl() const</h2>
+<p class="text">Returns the URL corresponding to this artifact. Always succeeds if the ServerSpec is <a href="serverspec.html#valid">valid()</a>. 
+<h2 class="functionh"><a name="coordinate"></a>string ServerSpec::coordinate() const</h2>
+<p class="text">Returns the coordinate set by <a href="serverspec.html#parseJson">parseJson()</a>, typically a string like 1.foobar.i.example.com.
+<p class="text">Returns an empty string if the object is not <a href="serverspec.html#valid">valid()</a>. 
+<h2 class="functionh"><a name="error"></a>string ServerSpec::error() const</h2>
+<p class="text">Returns whatever <a href="serverspec.html#setError">setError()</a> set, or an empty string if <a href="serverspec.html#setError">setError()</a> has not been called. 
+<h2 class="functionh"><a name="expectedPeakMemory"></a>int ServerSpec::expectedPeakMemory() const</h2>
+<p class="text">Returns the expected peak memory consumption of the server in kilobytes, or 0 if none was specified. 
+<h2 class="functionh"><a name="expectedTypicalMemory"></a>int ServerSpec::expectedTypicalMemory() const</h2>
+<p class="text">Returns the expected typical memory consumption of the server in kilobytes, or 0 if none was specified. 
+<h2 class="functionh"><a name="json"></a>string ServerSpec::json() const</h2>
+<p class="text">Returns a json object corresponding to this ServerSpec. If this object is !valid(), then the return value is "{}". 
+<h2 class="functionh"><a name="maxRestarts"></a>int ServerSpec::maxRestarts() const</h2>
+<p class="text">Returns the maximum number of times this service may be restarted, which is 0 by default (ie. the service may be started, but never restarted). 
+<h2 class="functionh"><a name="md5"></a>string ServerSpec::md5() const</h2>
+<p class="text">Returns the MD5 sum specified, or an empty string if none is specified. 
+<h2 class="functionh"><a name="parseJson"></a>static ServerSpec ServerSpec::parseJson( const string &amp; specification, <span class=nobr><a href="init.html">Init</a> &amp; init )</span></h2>
+<p class="text">Parses a json <i>specification</i> and sets up an object. If the parsing failed, the object's <a href="serverspec.html#coordinate">coordinate()</a> will be a null string afterwards.
+<p class="text"><i>init</i> is needed in order to assign defaults that do not conflict with any other <a href="process.html">Process</a> <i>init</i> currently manages. 
+<h2 class="functionh"><a name="port"></a>int ServerSpec::port() const</h2>
+<p class="text">Returns the port specified in JSON, or the random number picked at read time was specified. 
+<h2 class="functionh"><a name="restartPeriod"></a>int ServerSpec::restartPeriod() const</h2>
+<p class="text">Returns the minimum number of seconds between restarts of this service, which is 0 by default. 
+<h2 class="functionh"><a name="setError"></a>void ServerSpec::setError( const string &amp; error )</h2>
+<p class="text">Records that <i>error</i> occured while creating this ServerSpec. The initial value is an empty string. 
+<h2 class="functionh"><a name="shutdownScript"></a>string ServerSpec::shutdownScript() const</h2>
+<p class="text">Returns the path to the server's shutdowbn script, relative to the server's own root. Typically this will be something like scripts/shutdown.sh, although it may be anything.
+<p class="text">Returns an empty string if none has been set. 
+<h2 class="functionh"><a name="startupScript"></a>string ServerSpec::startupScript() const</h2>
+<p class="text">Returns the path to the server's startup script, relative to the server's own root. Typically this will be something like scripts/startup.sh, although it may be anything.
+<p class="text">Returns an empty string if none has been set. 
+<h2 class="functionh"><a name="valid"></a>bool ServerSpec::valid()</h2>
+<p class="text">Returns true if the ServerSpec is valid and usable, and false if there is any kind of error, e.g. port being a string or artifact not being supplied. Throws absolutely no exceptions. 
+<h2 class="functionh"><a name="value"></a>int ServerSpec::value() const</h2>
+<p class="text">Returns the server's value, or 0 if none was specified. A bigger value means that the server is more valuable. If the host runs out of CPU/RAM, then something will be killed, ideally something that uses a lot of that resource and has low value. 
+<p class="rights">This web page based on source code belonging to <a href="http://arnt.github.com/nodee/">Arnt Gulbrandsen</a>. All rights reserved.</body></html>
