@@ -1,0 +1,25 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<html lang=en><head><title>Init documentation</title>
+<link rel=stylesheet href="udoc.css" type="text/css">
+<link rel=generator href="http://archiveopteryx.org/udoc/">
+</head><body>
+<h1 class="classh">Class Init.</h1>
+<p class="text">The Init class manages all the subprocesses.
+<p class="text">This is the core of Nodee: When a service needs to be started, eventually a <a href="process">Process</a> will be created and handed over to Init for management. Init will be happy as long as nothing happens, and when the process (lowercase) exits, Init notices and informs the <a href="process">Process</a>, so that the <a href="process">Process</a> can take appropriate action.
+<p class="text">Init is more or less a singleton. I don't like singletons, but in this case the unix design forces our hand: Making more than one object call ::wait() works poorly. You can make more than one Init, but they actually will operate on the same <a href="process">Process</a> list. 
+<h2 class="functionh"><a name="Init"></a>Init::Init()</h2>
+<p class="text">Constructs an empty Init. 
+<h2 class="functionh"><a name="check"></a>void Init::check()</h2>
+<p class="text">Waits for and processes a single child event. 
+<h2 class="functionh"><a name="find"></a><span class=nobr><a href="process">Process</a> *</span> Init::find( int pid ) const</h2>
+<p class="text">Returns a pointer to the <a href="process">Process</a> object for <i>pid,</i> or an null pointer if <i>pid</i> is not the pid of a managed service. 
+<h2 class="functionh"><a name="manage"></a>void Init::manage<span class=nobr>( <a href="process">Process</a> * p )</span></h2>
+<p class="text">Starts managing <i>p.</i> This is a copy operation; the managed object is not yours.
+<p class="text">Returns a pointer to the copied object. 
+<h2 class="functionh"><a name="operator()"></a>void Init::operator()()</h2>
+<p class="text">boost::thread wants to call <a href="init#start">start()</a> by this name, so here's a wrapper around <a href="init#start">start()</a>. 
+<h2 class="functionh"><a name="start"></a>void Init::start()</h2>
+<p class="text">Does all there is to do. 
+<h2 class="functionh"><a name="destructor"></a>Init::~Init()</h2>
+<p class="text">Destroys the object. Does not kill any subprocesses. 
+<p class="rights">This web page based on source code belonging to <a href="http://arnt.github.com/nodee/">Arnt Gulbrandsen</a>. All rights reserved.</body></html>

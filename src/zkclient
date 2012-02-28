@@ -1,0 +1,21 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<html lang=en><head><title>ZkClient documentation</title>
+<link rel=stylesheet href="udoc.css" type="text/css">
+<link rel=generator href="http://archiveopteryx.org/udoc/">
+</head><body>
+<h1 class="classh">Class ZkClient.</h1>
+<p class="text">Inherits <a href="process">Process</a>
+<p class="text">The ZkClient is Nodee's Zookeeper client class; its responsibility is to ensure that Zookeeper always sees an open TCP connection to this Nodee intance and that Nodee's ephemeral node contains reasonably accurate infornmation about the host's status.
+<p class="text">ZkClient uses two threads: One to write to Zookeeper when we need to do update the ephemeral node, and one to listen in case Zookeeper tells us anything. The latter is enforced by Zookeeper's C library. There's also some locking in the source that may not suit us too well, but the zookeeper C API authors didn't ask us.
+<p class="text">The class offers very API: Create an object, the two threads appear, invisibly to you, and ZkClient goes off to do its thing. It will kill Nodee if it is unable to keep Zookeeper updated for a prolonged period (details rather fluid).
+<p class="text">Note that if ZkClient kills Nodee too soon, a Zookeeper restart may cause the entire cluster to reboot, as Nodee's reboot watcher reboots the host. If that were to happen on same host that runs Zookeeper and Nodee starts up more quickly, we might never again reach a functioning state. 
+<h2 class="functionh"><a name="ZkClient"></a>ZkClient::ZkClient( const std::string &amp; server )</h2>
+<p class="text">Constructs a Zookeeper client which will connect to zookeeper <i>server</i> and update an ephemereal node every two minutes.
+<p class="text"><i>server</i> is in Zookeeper's usual format (10.0.10.10:3000,10.1.10.10:3000 or similar).
+<p class="text">This constructor succeeds or aborts the program via ::exit(). 
+<h2 class="functionh"><a name="operator()"></a>void ZkClient::operator()()</h2>
+<p class="text">boost::thread wants to call <a href="zkclient#start">start()</a> by this name, so here's a wrapper around <a href="zkclient#start">start()</a>. 
+<h2 class="functionh"><a name="start"></a>void ZkClient::start()</h2>
+<p class="text">This is run in a separate thread and is responsible for updating the ephemeral zk node with <a href="hoststatus">HostStatus</a> content occasionally. 
+<p class="text">Reimplements <a href="process#start">Process::start()</a>.
+<p class="rights">This web page based on source code belonging to <a href="http://arnt.github.com/nodee/">Arnt Gulbrandsen</a>. All rights reserved.</body></html>
