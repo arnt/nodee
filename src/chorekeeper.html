@@ -8,25 +8,25 @@
 <p class="text">The implementation is highly linux-specific; it gathers almost all of its data from the /proc file system.
 <p class="text">The linux kernel includes an out-of-memory killer (oomkiller in kernel terms) but it's not suitable for cloudname. It acts much too slowly, and its choice of process is not well tuned for our needs.
 <p class="text">Therefore, ChoreKeeper does the job itself. It scans the system quite often, looking for signs that the host may be thrashing. If it is, and continues to thrash for many seconds, then nodee picks a service and kills it. The service may use more than one process. When a service has been killed, nodee refuses to kill another for a while, since the input data will be unreliable due to the change of state. (The other services again need to read their working set into RAM. Until that has happened, nodee cannot really interpret its data.)
-<p class="text">ChoreKeeper has several algorithms for deciding which service to kill (implemented by <a href="chorekeeper#furthestOverPeak">furthestOverPeak()</a>, <a href="chorekeeper#furthestOverExpected">furthestOverExpected()</a>, <a href="chorekeeper#leastValuable">leastValuable()</a>, <a href="chorekeeper#thrashingMost">thrashingMost()</a> and <a href="chorekeeper#biggest">biggest()</a>). Its algorithms are much better than the kernel's, since we're able to give it better information. For instance, by telling nodee how much RAM a service typically and maximally should use, we're giving nodee a good way to decide which server is using too much memory, and by segregating services, we enable nodee to gather data per service, not per process.
-<p class="text">There is no configuration; the class just does the right thing based on the <a href="serverspec">ServerSpec</a> json supplied by the cloudname users. 
-<h2 class="functionh"><a name="ChoreKeeper"></a>ChoreKeeper::ChoreKeeper<span class=nobr>( <a href="init">Init</a> &amp; i )</span></h2>
-<p class="text">Constructs a ChoreKeeper. The caller has to call <a href="chorekeeper#start">start()</a> to perform chores, thereafter the ChoreKeeper will call <i>i</i> to obtain a list of processes and perform whatever chores are needed. 
-<h2 class="functionh"><a name="biggest"></a><span class=nobr><a href="process">Process</a> *</span> ChoreKeeper::biggest() const</h2>
-<p class="text">Scans the <a href="process">Process</a> table and finds the process whose memory usage is biggest. Returns a null pointer only if no Processes are being managed by Nodee. 
+<p class="text">ChoreKeeper has several algorithms for deciding which service to kill (implemented by <a href="chorekeeper.html#furthestOverPeak">furthestOverPeak()</a>, <a href="chorekeeper.html#furthestOverExpected">furthestOverExpected()</a>, <a href="chorekeeper.html#leastValuable">leastValuable()</a>, <a href="chorekeeper.html#thrashingMost">thrashingMost()</a> and <a href="chorekeeper.html#biggest">biggest()</a>). Its algorithms are much better than the kernel's, since we're able to give it better information. For instance, by telling nodee how much RAM a service typically and maximally should use, we're giving nodee a good way to decide which server is using too much memory, and by segregating services, we enable nodee to gather data per service, not per process.
+<p class="text">There is no configuration; the class just does the right thing based on the <a href="serverspec.html">ServerSpec</a> json supplied by the cloudname users. 
+<h2 class="functionh"><a name="ChoreKeeper"></a>ChoreKeeper::ChoreKeeper<span class=nobr>( <a href="init.html">Init</a> &amp; i )</span></h2>
+<p class="text">Constructs a ChoreKeeper. The caller has to call <a href="chorekeeper.html#start">start()</a> to perform chores, thereafter the ChoreKeeper will call <i>i</i> to obtain a list of processes and perform whatever chores are needed. 
+<h2 class="functionh"><a name="biggest"></a><span class=nobr><a href="process.html">Process</a> *</span> ChoreKeeper::biggest() const</h2>
+<p class="text">Scans the <a href="process.html">Process</a> table and finds the process whose memory usage is biggest. Returns a null pointer only if no Processes are being managed by Nodee. 
 <h2 class="functionh"><a name="detectThrashing"></a>void ChoreKeeper::detectThrashing()</h2>
 <p class="text">This function looks at whether the host appears to be thrashing, and stores the result in instance variables.
 <p class="text">It's a little difficult to define thrashing. I tried to experiment, but gathering data during thrashing is such a pain.
 <p class="text">Generally two of the following properties were true for many seconds: The machine was reading in pages (major page faults), the machine was writing to swap, the load was far higher than the number of cores. But any one of these can also be true briefly at times when my human judgment is that the machine isn't thrashing.
-<p class="text">This function does a heuristic momentary test. If eight consecutive tests indicate thrashing, <a href="chorekeeper#isThrashing">isThrashing()</a> returns true. 
-<h2 class="functionh"><a name="furthestOverExpected"></a><span class=nobr><a href="process">Process</a> *</span> ChoreKeeper::furthestOverExpected() const</h2>
-<p class="text">Scans the <a href="process">Process</a> table and finds the process whose memory usage is furthest above it stated typical memory usage. Returns a null pointer <a href="process">Process</a> if none are above their expected typical size. 
-<h2 class="functionh"><a name="furthestOverPeak"></a><span class=nobr><a href="process">Process</a> *</span> ChoreKeeper::furthestOverPeak() const</h2>
-<p class="text">Scans the <a href="process">Process</a> table and finds the process whose memory usage is furthest above its stated peak. Returns a null pointer if none are above their peak. 
+<p class="text">This function does a heuristic momentary test. If eight consecutive tests indicate thrashing, <a href="chorekeeper.html#isThrashing">isThrashing()</a> returns true. 
+<h2 class="functionh"><a name="furthestOverExpected"></a><span class=nobr><a href="process.html">Process</a> *</span> ChoreKeeper::furthestOverExpected() const</h2>
+<p class="text">Scans the <a href="process.html">Process</a> table and finds the process whose memory usage is furthest above it stated typical memory usage. Returns a null pointer <a href="process.html">Process</a> if none are above their expected typical size. 
+<h2 class="functionh"><a name="furthestOverPeak"></a><span class=nobr><a href="process.html">Process</a> *</span> ChoreKeeper::furthestOverPeak() const</h2>
+<p class="text">Scans the <a href="process.html">Process</a> table and finds the process whose memory usage is furthest above its stated peak. Returns a null pointer if none are above their peak. 
 <h2 class="functionh"><a name="isThrashing"></a>bool ChoreKeeper::isThrashing() const</h2>
 <p class="text">Returns true if the machine appears to thrash, and has been for a few seconds. Returns false in all other cases (including in the first few seconds after start). 
-<h2 class="functionh"><a name="leastValuable"></a><span class=nobr><a href="process">Process</a> *</span> ChoreKeeper::leastValuable() const</h2>
-<p class="text">Scans the <a href="process">Process</a> table and finds the least important process. Returns a null pointer if none are less important than the most important <a href="process">Process</a>. 
+<h2 class="functionh"><a name="leastValuable"></a><span class=nobr><a href="process.html">Process</a> *</span> ChoreKeeper::leastValuable() const</h2>
+<p class="text">Scans the <a href="process.html">Process</a> table and finds the least important process. Returns a null pointer if none are less important than the most important <a href="process.html">Process</a>. 
 <h2 class="functionh"><a name="oneBitOfThrashing"></a>static bool ChoreKeeper::oneBitOfThrashing( int nr_free_pages, int pgmajfault, int pgpgout )</h2>
 <p class="text">Returns true or false depending on whether <i>nr_free_pages,</i> <i>pgmajfault</i> and <i>pgpgout</i> indicate that there may be thrashing.
 <p class="text">The algorithm used is highly heuristic. It's intended to return true a little too often, so ChoreKeeper only takes action if oneBitOfThrashing() returns consistently true for many seconds.
@@ -36,15 +36,15 @@
 <h2 class="functionh"><a name="readProcVmstat"></a>void ChoreKeeper::readProcVmstat( const char * fileName, int &amp; nr_free_pages, int &amp; pgmajfault, int &amp; pgpgout )</h2>
 <p class="text">Opens and reads <i>fileName,</i> storing the eponymous variables in <i>nr_free_pages,</i> <i>pgmajfault</i> and <i>pgpgout.</i> 
 <h2 class="functionh"><a name="scanProcesses"></a>void ChoreKeeper::scanProcesses( const char * proc, int me )</h2>
-<p class="text">Scans the <a href="process">Process</a> table and the /proc/&lt;pid&gt;/stat files and finds out how much memory each of our processes is using (including all children) and how badly it is suffering from thrashing.
+<p class="text">Scans the <a href="process.html">Process</a> table and the /proc/&lt;pid&gt;/stat files and finds out how much memory each of our processes is using (including all children) and how badly it is suffering from thrashing.
 <p class="text"><i>proc</i> is /proc (or another value for testing) and <i>me</i> is nodee's pid (or another value for testing). I dislike this, can't tell why. 
 <h2 class="functionh"><a name="start"></a>void ChoreKeeper::start()</h2>
 <p class="text">The guts of the class.
-<p class="text">If the object is <a href="chorekeeper#valid">valid()</a>, start() will do all the work. If it isn't <a href="chorekeeper#valid">valid()</a>, start() never returns and never spends hardly any CPU cycles. 
-<h2 class="functionh"><a name="thrashingMost"></a><span class=nobr><a href="process">Process</a> *</span> ChoreKeeper::thrashingMost() const</h2>
-<p class="text">Scans the <a href="process">Process</a> table and finds the <a href="process">Process</a> that's most negatively affected by thrashing. Returns a null pointer if none are noticeably worse affected than the others. 
+<p class="text">If the object is <a href="chorekeeper.html#valid">valid()</a>, start() will do all the work. If it isn't <a href="chorekeeper.html#valid">valid()</a>, start() never returns and never spends hardly any CPU cycles. 
+<h2 class="functionh"><a name="thrashingMost"></a><span class=nobr><a href="process.html">Process</a> *</span> ChoreKeeper::thrashingMost() const</h2>
+<p class="text">Scans the <a href="process.html">Process</a> table and finds the <a href="process.html">Process</a> that's most negatively affected by thrashing. Returns a null pointer if none are noticeably worse affected than the others. 
 <h2 class="functionh"><a name="valid"></a>bool ChoreKeeper::valid() const</h2>
 <p class="text">Returns true if the ChoreKeeper is able to work effectively on this OS, and false if not. 
 <h2 class="functionh"><a name="destructor"></a>ChoreKeeper::~ChoreKeeper()</h2>
 <p class="text">Just a dummy to please the linker. Yes, really. 
-<p class="rights">This web page based on source code belonging to <a href="http://arnt.github.com/nodee/">Arnt Gulbrandsen</a>. All rights reserved.</body></html>
+<p class="rights">This web page based on source code belonging to <a href="http.html://arnt.github.com/nodee/">Arnt Gulbrandsen</a>. All rights reserved.</body></html>

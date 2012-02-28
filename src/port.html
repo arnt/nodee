@@ -6,7 +6,7 @@
 <h1 class="classh">Class Port.</h1>
 <p class="text">The Port class contains a couple of static functions to find free TCP ports on this system.
 <p class="text">Nodee needs to find free TCP ports, and cannot use the normal approach since it has to know the port number much earlier. Therefore this class contains some linux-specific /proc parsing to supply the numbers we need.
-<p class="text">Now that I write this, I notice a bug. <a href="port#assignFree">assignFree()</a> should also look at all the <a href="process">Process</a> objects and consider any ports assigned but not yet used as occupied. 
+<p class="text">Now that I write this, I notice a bug. <a href="port.html#assignFree">assignFree()</a> should also look at all the <a href="process.html">Process</a> objects and consider any ports assigned but not yet used as occupied. 
 <h2 class="functionh"><a name="assignFree"></a>int Port::assignFree( const set&lt;int&gt; &amp; avoid )</h2>
 <p class="text">Returns a free port on this host, avoiding <i>avoid</i> (which is an empty set by default).
 <p class="text">Ports used for any purpose are assumed to be used; if a process opens a TCP connection from TCP6 port 1025, this function will never return 1025, even though listening would be legal in most cases.
@@ -14,4 +14,4 @@
 <h2 class="functionh"><a name="busy"></a>static set&lt;int&gt; Port::busy( const char * filename )</h2>
 <p class="text">Parses <i>filename</i> as though it were linux' /proc/net/tcp and returns a set&lt;int&gt; of busy ports.
 <p class="text">Any port used for any purpose is considered busy, even if the use we have in mind might be able to coexist with the port's current use. The code is simpler that way, there are enough free ports on the system, and differentiating between services is easier on the poor brain of the sysadmin looking at the system. 
-<p class="rights">This web page based on source code belonging to <a href="http://arnt.github.com/nodee/">Arnt Gulbrandsen</a>. All rights reserved.</body></html>
+<p class="rights">This web page based on source code belonging to <a href="http.html://arnt.github.com/nodee/">Arnt Gulbrandsen</a>. All rights reserved.</body></html>
