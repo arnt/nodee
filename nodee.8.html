@@ -1,0 +1,267 @@
+<!-- Creator     : groff version 1.21 -->
+<!-- CreationDate: Wed Feb 29 12:34:12 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>nodee</title>
+
+</head>
+<body>
+
+<h1 align="center">nodee</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#OPTIONS">OPTIONS</a><br>
+<a href="#HTTP API">HTTP API</a><br>
+<a href="#CONFIGURATION FILE">CONFIGURATION FILE</a><br>
+<a href="#DIAGNOSTICS">DIAGNOSTICS</a><br>
+<a href="#BUGS">BUGS</a><br>
+<a href="#AUTHOR">AUTHOR</a><br>
+<a href="#VERSION">VERSION</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">nodee - daemon
+to start and monitor cloudname hosts</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>$BINDIR/nodee</b>
+[ --port | -P <i>port</i> ] [ --zookeeper <i>url</i> ]</p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>nodee</b> is
+an <b>init</b>(8)-like daemon to start, manage and stop
+services running within a Cloudname cluster.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Once started,
+<b>nodee</b> is managed completely using its embedded web
+server. There is an HTTP API to start/stop services, and
+additionally <b>nodee</b> records some information about the
+host on which it runs using <b>zookeeper</b> so that
+Cloudname users may know that the host exists and how it can
+be used.</p>
+
+<h2>OPTIONS
+<a name="OPTIONS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Each option can
+also be specified in the configuration file and as
+environment variables. Environment variables override the
+configuration file; command-line options override both.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The --help flag
+emits terse help text and the --version flag emits a version
+number.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The --port (-P)
+flag allows running <b>nodee</b> on a different port than
+its default 40. This option is called <b>port</b> in the
+configuration file and NODEE_PORT in the environment. (Other
+options are similarly named.)</p>
+
+<p style="margin-left:11%; margin-top: 1em">The --depot
+flag specifies the an artefact depot, in the format
+group=url, for example --depot
+bigco=http://artefactory.i.bigco.com/webapp/. When
+<b>Nodee</b> needs to download an artifact, it will append
+its name to the URL for the relevant group and expect to
+find a file there.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Nodee</b>
+uses wget or curl to do the actual downloading, so the
+protocols and other features supported are those of either
+wget or curl. Notably, http://root:pils@internal.google.com
+will authenticate as root using password pils on
+internal.google.com.</p>
+
+<p style="margin-left:11%; margin-top: 1em">It&rsquo;s
+possible to specify several depots; <b>nodee</b> will use
+all. However, if you specify two depots with the same group
+name, only one will be used. As you would expect, the
+command line overrides the environment, which in turn
+overrides the configuration file. <b>Nodee</b> tells you
+what it does, just to be sure.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The --dir
+option specifies the base directory <b>nodee</b> uses for
+all its work.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The
+--artefactdir flag specifies where (relative to the base
+directory) <b>nodee</b> stores the artefacts it
+downloads.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The --workdir
+flag specifies where (relative to the base directory)
+<b>nodee</b> creates working directories for running
+services.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The --zookeeper
+flag specifies where to locate zookeeper, in the same format
+as Zookeeer uses, for instance
+192.0.2.8:3000,192.0.2.72:3000.</p>
+
+<h2>HTTP API
+<a name="HTTP API"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>Nodee</b>
+serves seven URLs: Three to start/stop/list running
+services, three to install/remove/list locally stored
+artifacts (this is strictly unnecessary since <b>nodee</b>
+demand-loads artifacts), and one to report on the
+host&rsquo;s status.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>POST
+/service/start</b> starts a service, based on a JSON object
+supplied in the HTTP request body.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The JSON
+contents are not yet documented. TBD.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>/service/stop</b>/number
+stops the specified service. The number is returned by
+/service/list.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>/service/list</b>
+lists the running services in JSON format.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The JSON
+contents are not yet documented. TBD.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>/artefact/install</b>
+installs an artefact, based on a JSON object supplied in the
+HTTP request body.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The JSON
+contents are not yet documented. TBD.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>/artefact/remove</b>/name
+removes the artefact of the specified name.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>/artefact/list</b>
+lists the locally stored artefacts as a simple JSON
+array/list.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>/nodee/status</b>
+returns a few key numbers describing the host&rsquo;s
+status.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The JSON
+contents are not yet documented (or quite stable). TBD.</p>
+
+<p style="margin-left:11%; margin-top: 1em">In addition to
+the seven API calls, <b>nodee</b> serves a few more URLs
+using invariant responses. For instance, /robots.txt tells
+any passing bots to stay away from the &quot;site&quot;.
+These are not meant to be used and their exact contents may
+change.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Some of these
+API calls will probably change, so that a subset of the API
+becomes RESTful.</p>
+
+<h2>CONFIGURATION FILE
+<a name="CONFIGURATION FILE"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>Nodee&rsquo;s</b>
+configuration file uses the classic line-oriented
+format:</p>
+
+<p style="margin-left:17%; margin-top: 1em">port=40 <br>
+# this is a comment <br>
+basedir=/opt/foo</p>
+
+<p style="margin-left:11%; margin-top: 1em">All
+command-line options (except --config and --help) also exist
+as configuration file options.</p>
+
+<h2>DIAGNOSTICS
+<a name="DIAGNOSTICS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">The return code
+of <b>nodee</b> is zero if all goes well, and a non-zero in
+case of errors.</p>
+
+<p style="margin-left:11%; margin-top: 1em">All diagnostics
+are logged via stderr.</p>
+
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Well, well.
+Very likely.</p>
+
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">The Cloudname
+developers, primarily Arnt Gulbrandsen
+&lt;arnt@gulbrandsen.priv.no&gt;</p>
+
+<h2>VERSION
+<a name="VERSION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">This man page
+covers <b>nodee</b> version $VERSION, released $DATE,
+http://cloudname.org/nodee/$VERSION</p>
+
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em">http://cloudname.org,
+https://github.org/arnt/nodee</p>
+<hr>
+</body>
+</html>
