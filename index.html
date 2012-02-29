@@ -2,10 +2,70 @@
 <html><title>Nodee!</title>
 <h1>Nodee</h1>
 
-<p>Verbiage goes here.
+<p>Nodee is the program that manages a host (a physical host or a
+virtual one at Amazon or wherever) within
+<a href="http://cloudname.org">Cloudname</a>, this page gives an overview
+of nodee. It's 30% introduction, 30% roadmap, 40% internals or perhaps
+you'd prefer honesty &mdash; 100% braindump.
 
-<p>After the verbiage, a
-<a href="src/">link to source documentation</a>.
+<p>A digression to set the tone: Nodee is currently written by
+<a href="http://arnt.gulbrandsen.priv.no">Arnt Gulbrandsen</a> and
+very liberally licensed. I think it says BSD. But it's paid for
+by <a href="http://comoyo.com">Telenor Comoyo</a>, so the copyright
+holder ought probably to be Comoyo or something else in the corporate
+structure. Happily, my BSD is just like coporate BSD, so noone cares.
+
+<p>What's better than a digression? <b>Two!</b> Cloudname is a
+set of tools and libraries to run services in a cloud of hosts, rather
+than on a single linux host. It takes care of picking the right hosts
+to run each service, plumbs together services via TCP as needed,
+gathers log output where it ought to be, and so on and so forth.
+
+<p>Nodee's role in all that is to take a host, offer to run services
+on it, keep track of what is running and what resources are used, and
+throw out anything that endangers the common good. If a service starts
+using more RAM than nodee thinks it should <i>and that causes
+problems</i>, then nodee will kill that service. The service's manager
+will have to find a new host (or perhaps two or more, if one isn't
+enough for the momentary load).
+
+<p>Nodee kills services rather abruptly. You do not get many seconds'
+warning, or indeed any warning at all. The general theory is that the
+host's integrity must be preserved, so if there's thrashing nodee will
+do whatever it takes to stop that. You can use as much RAM as you
+want. If you use more than you told nodee, fine. If you use more RAM
+and the host starts to swap, <i>boom</i>, no warning.
+
+<p>Perhaps, now that I write it, perhaps nodee should provide some
+sort of early warning. Service managers must be able to learn about it
+when services go over their RAM/CPU limits, so they can start new
+instances if that's appropriate. Should nodee tell them, or should
+they learn these things by tracking monitoring? I think we have a
+roadmap item here.
+
+<p>Nodee's startup uses a configuration file and command-line options,
+not many of either. The <a href="nodee.8.html">manpage</a> specifies
+them. Two aspects of Nodee can also be configured by editing shell
+scripts, namely how it downloads and installs services.
+
+<p>For example, if downloading should always use a specific web proxy
+(to limit load on the software repository), then the download script
+can be edited correspondingly.
+
+<p>The one and only want to control Nodee is using a HTTP API, about
+which I will write when I've had some coffee.
+
+<p>The source code is available on github in a
+<a href="https://github.com/Cloudname/nodee/">main tree</a> and
+<a href="https://github.com/arnt/nodee/">arnt's fork</a>, which
+is effectively the same, except that
+<a href="https://github.com/arnt/nodee/tree/gh-pages">this page</a>
+is generated from the arntly fork, which also contains
+<a href="src/">source documentation</a>.
+
+<p>The word artefact is spelt artifact. People apparently can't agree
+on that. I can't summon any enthusiasm for that fight, so nodee
+accepts both spellings wherever doing that wasn't too difficult.
 
 <p><a href="http://cloudname.org">Cloudname!</a>
 </html>
